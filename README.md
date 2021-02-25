@@ -7,3 +7,5 @@ I have used pickling to serilize the model into byte code and store that; while 
 However, sklearn-onnx converts models in ONNX format which can be then used to compute predictions with the backend of our choice and this is the preferred deployment strategy. ONNX runtime support multiple languages and simplifies interoperanility.  There exists a way to automatically check every converter with onnxruntime, onnxruntime-gpu. Every converter is tested with this backend.
 
 The notebook version here covers the details on ONNX deployment strategy.
+
+More details can be found http://onnx.ai/sklearn-onnx/
