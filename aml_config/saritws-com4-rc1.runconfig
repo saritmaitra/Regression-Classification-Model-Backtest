@@ -1,0 +1,63 @@
+{
+    "script": "Model.py",
+    "arguments": [],
+    "framework": "Python",
+    "communicator": "None",
+    "target": "saritws-com4",
+    "environment": {
+        "name": "saritws-env1",
+        "version": "1",
+        "python": {
+            "interpreterPath": "python",
+            "userManagedDependencies": false,
+            "condaDependencies": {
+                "channels": [
+                    "conda-forge"
+                ],
+                "dependencies": [
+                    "python=3.6.2",
+                    {
+                        "pip": [
+                            "azureml-defaults",
+                            "pandas",
+                            "numpy",
+                            "flask",
+                            "scikit-learn",
+                            "automl-defaults"
+                        ]
+                    }
+                ],
+                "name": "project_environment"
+            },
+            "baseCondaEnvironment": null
+        },
+        "environmentVariables": {},
+        "docker": {
+            "baseImage": "mcr.microsoft.com/azureml/base:intelmpi2018.3-ubuntu16.04",
+            "baseDockerfile": null,
+            "baseImageRegistry": {
+                "address": null,
+                "username": null,
+                "password": null
+            },
+            "enabled": false,
+            "arguments": []
+        },
+        "spark": {
+            "repositories": [],
+            "packages": [],
+            "precachePackages": true
+        },
+        "inferencingStackVersion": null
+    },
+    "history": {
+        "outputCollection": true,
+        "snapshotProject": false,
+        "directoriesToWatch": [
+            "logs"
+        ]
+    },
+    "docker": {
+        "useDocker": true
+    }
+}
