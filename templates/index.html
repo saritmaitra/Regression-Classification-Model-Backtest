@@ -19,11 +19,10 @@
         <!-- Main Input For Receiving Query to our ML -->
         <form action="{{ url_for('predict')}}" method="post">
             <input type="text" name="rate" placeholder="rate" required="required" />
-            <input type="text" name="sales in first month" placeholder="sales in first month" required="required" />
-            <input type="text" name="sales in second month" placeholder="sales in second month" required="required" />
+            <input type="text" name="12 hrs prediction" placeholder="Next 12 predictions" required="required" />
+            
 
-
-            <button type="submit" class="btn btn-primary btn-block btn-large">Predict sales in third month</button>
+            <button type="submit" class="btn btn-primary btn-block btn-large">Forecast</button>
         </form>
 
         <br>
