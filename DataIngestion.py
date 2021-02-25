@@ -16,7 +16,7 @@ from math import sqrt
 from pandas import DataFrame, concat
 
 
-apiKey = "43b01c420b66888ce4c91b364647600814578c186e8604322152f44c641ebbc1"
+apiKey = "xxxxxxxxxx"
 url = "https://min-api.cryptocompare.com/data/histohour"
 
 # BTC 1st 2000 datapoints
