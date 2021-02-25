@@ -3,3 +3,7 @@ Here I am developing a machine learning regression algorithm on CryptoCurrency(B
 The app predicts the Closing price for BitCoin; the deployment is with real-time inference selecting the model trained on the "Close" column. However, this is a sample project and not to be tried for commercial purpose.
 
 I have used pickling to serilize the model into byte code and store that; while deploying de-serilization is needed.
+
+However, sklearn-onnx converts models in ONNX format which can be then used to compute predictions with the backend of our choice and this is the preferred deployment strategy. ONNX runtime support multiple languages and simplifies interoperanility.  There exists a way to automatically check every converter with onnxruntime, onnxruntime-gpu. Every converter is tested with this backend.
+
+The notebook version here covers the details on ONNX deployment strategy.
