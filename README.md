@@ -12,4 +12,4 @@ More details can be found http://onnx.ai/sklearn-onnx/
 
 # ML Workflow
 
-Data Ingestion -> Data Validation -> Feature Engineering -> Time-series Split -> Model Training -> Accuracy Metrics -> Model Registration & Versioning -> Model Serving
+Data Ingestion -> Data Validation -> Feature Engineering -> Time-series Split -> Model Training/Testing -> Accuracy Metrics -> Model Registration & Versioning -> Model Serving
