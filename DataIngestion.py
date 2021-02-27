@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from time import time
 from pandas import DataFrame, concat
 from sklearn import metrics
-from sklearn.linear_model import LinearRegression, ElasticNet
+from sklearn.linear_model import ElasticNet
 from sklearn import preprocessing
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error, r2_score
