@@ -27,9 +27,11 @@ print(check)
 check = requests.get(url)
 print("If Response [200] then working:", check)
 
-check_json = check.json()
-data = check_json['Data']
-print(data)
+# check if url and API working
+check = requests.get(url)
+print(check.text)
+print(check.status_code)
+print("If Response [200] then working:", check)
 
 ...
 # BTC 1st 2000 datapoints
