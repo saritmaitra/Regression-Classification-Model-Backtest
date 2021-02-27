@@ -19,6 +19,19 @@ from pandas import DataFrame, concat
 apiKey = "xxxxxxxxxx"
 url = "https://min-api.cryptocompare.com/data/histohour"
 
+# check if url and API working
+check = requests.get(url)
+print(check)
+
+# check if url and API working
+check = requests.get(url)
+print("If Response [200] then working:", check)
+
+check_json = check.json()
+data = check_json['Data']
+print(data)
+
+...
 # BTC 1st 2000 datapoints
 payload = {
     "api_key": apiKey, 
