@@ -9,17 +9,19 @@ from sklearn.metrics import r2_score
 import sklearn.externals
 import joblib
 
+...
 finalDataSet = pd.read_csv("finalDataSet.csv")
 finalDataSet.set_index("time", inplace=True)
 # print(df.tail())
 
-
+...
 foreCastColumn = "close"  # creating label
 
 foreCastOut = int(12)  # prediction for next 12 hrs
 
 finalDataSet["label"] = finalDataSet[foreCastColumn].shift(-foreCastOut)
 
+...
 X = np.array(finalDataSet.drop(["label"], axis=1))
 
 # normalize data
@@ -33,16 +35,18 @@ finalDataSet.dropna(inplace=True)
 
 y = np.array(finalDataSet["label"])
 
-
+'''
 # Split the data into train and test data set
 tscv = TimeSeriesSplit(n_splits=5)
 for train_index, test_index in tscv.split(X, y):
     X_train, X_test = X[train_index], X[test_index]
     y_train, y_test = y[train_index], y[test_index]
 
+...
 # regression model
 Model = ElasticNet(alpha=0.0001, l1_ratio=0.5, random_state=0).fit(X_train, y_train)
 
+...
 # cross validated accucary on train set
 scores = cross_val_score(Model, X_train, y_train, cv=tscv)
 
@@ -50,7 +54,7 @@ print("Training Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2)
 print("Intercept:", Model.intercept_)
 print("Slope:", Model.coef_[0])
 
-
+...
 # prediction on training
 trainPredict = Model.predict(X_train)
 r_squared = r2_score(y_train, trainPredict)
@@ -84,6 +88,7 @@ sumOfDf = sumOfDf.round(decimals=3)
 
 # print(sumOfDf)  # accuracy check
 
+...
 # Save model to file in the current working directory
 fileName = "ElasticModel.pkl"
 joblib.dump(Model, fileName)
@@ -97,6 +102,7 @@ ElasticModel = joblib.load(fileName)
 foreCastFutureValues = DataFrame(ElasticModel.predict(X_foreCastOut))
 # print(foreCastFutureValues)
 
+...
 # assigning names to columns
 foreCastFutureValues.rename(columns={0: "Forecast"}, inplace=True)
 
