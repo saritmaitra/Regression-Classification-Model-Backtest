@@ -15,12 +15,17 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from math import sqrt
 from pandas import DataFrame, concat
 
-
+...
 apiKey = "xxxxxxxxxx"
 url = "https://min-api.cryptocompare.com/data/histohour"
 
 # BTC 1st 2000 datapoints
-payload = {"api_key": apiKey, "fsym": "BTC", "tsym": "USD", "limit": 2000}
+payload = {
+    "api_key": apiKey, 
+    "fsym": "BTC", 
+    "tsym": "USD", 
+    "limit": 2000
+}
 
 result = requests.get(url, params=payload).json()
 
@@ -30,6 +35,7 @@ BitCoin1["time"] = pd.to_datetime(BitCoin1["time"], unit="s")
 
 BitCoin1.set_index("time", inplace=True)
 
+...
 # 2nd 2000 datapoints
 payload = {
     "api_key": apiKey,
@@ -47,6 +53,7 @@ BitCoin2["time"] = pd.to_datetime(BitCoin2["time"], unit="s")
 
 BitCoin2.set_index("time", inplace=True)
 
+...
 # 3rd 2000 datapoints
 payload = {
     "api_key": apiKey,
@@ -64,6 +71,7 @@ BitCoin3["time"] = pd.to_datetime(BitCoin3["time"], unit="s")
 
 BitCoin3.set_index("time", inplace=True)
 
+...
 # 4th 2000 datapoints
 payload = {
     "api_key": apiKey,
@@ -81,6 +89,7 @@ BitCoin4["time"] = pd.to_datetime(BitCoin4["time"], unit="s")
 
 BitCoin4.set_index("time", inplace=True)
 
+...
 # combining all bitcoin data (8000 data points)
 combineData1 = BitCoin2.append(BitCoin1)
 
