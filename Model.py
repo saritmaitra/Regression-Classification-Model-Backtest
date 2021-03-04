@@ -3,7 +3,7 @@ from pandas import concat, DataFrame
 import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import TimeSeriesSplit
-from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import LassoLars
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import r2_score
 import sklearn.externals
@@ -27,7 +27,7 @@ X = np.array(finalDataSet.drop(["label"], axis=1))
 # normalize data
 X = preprocessing.scale(X)
 
-X_foreCastOut = X[-foreCastOut:]
+XforeCastOut = X[-foreCastOut:]
 
 X = X[:-foreCastOut]
 
@@ -35,7 +35,7 @@ finalDataSet.dropna(inplace=True)
 
 y = np.array(finalDataSet["label"])
 
-'''
+...
 # Split the data into train and test data set
 tscv = TimeSeriesSplit(n_splits=5)
 for train_index, test_index in tscv.split(X, y):
@@ -44,7 +44,7 @@ for train_index, test_index in tscv.split(X, y):
 
 ...
 # regression model
-Model = ElasticNet(alpha=0.0001, l1_ratio=0.5, random_state=0).fit(X_train, y_train)
+Model = LassoLars(alpha=0.01).fit(X, y).fit(X_train, y_train)
 
 ...
 # cross validated accucary on train set
@@ -86,7 +86,7 @@ rse = np.mean((testPredict - y_test) ** 2) / np.mean((y_test - np.mean(y_test)) 
 sumOfDf["Validation metrics"] = [r_squared, mae, rmse, rae, rse]
 sumOfDf = sumOfDf.round(decimals=3)
 
-# print(sumOfDf)  # accuracy check
+print(sumOfDf)  # accuracy check
 
 ...
 # Save model to file in the current working directory
@@ -99,7 +99,7 @@ ElasticModel = joblib.load(fileName)
 # print(r2_score(y_test, ElasticModel.predict(X_test)))
 
 # forecast future 12 hrs values
-foreCastFutureValues = DataFrame(ElasticModel.predict(X_foreCastOut))
+foreCastFutureValues = DataFrame(ElasticModel.predict(XforeCastOut))
 # print(foreCastFutureValues)
 
 ...
