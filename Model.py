@@ -10,125 +10,132 @@ import sklearn.externals
 import joblib
 
 ...
-finalDataSet = pd.read_csv("finalDataSet.csv")
-finalDataSet.set_index("time", inplace=True)
-# print(df.tail())
-
-...
-foreCastColumn = "close"  # creating label
-
-foreCastOut = int(12)  # prediction for next 12 hrs
-
-finalDataSet["label"] = finalDataSet[foreCastColumn].shift(-foreCastOut)
-
-...
-X = np.array(finalDataSet.drop(["label"], axis=1))
-y = np.array(finalDataSet["label"])
-
-# normalize data
-X = preprocessing.scale(X)
-
-XforeCastOut = X[-foreCastOut:]
-
-X = X[:-foreCastOut]
-y = y[:-foreCastOut]
 
 
-...
-# Split the data into train and test data set
-tscv = TimeSeriesSplit(n_splits=5)
-for train_index, test_index in tscv.split(X, y):
-    X_train, X_test = X[train_index], X[test_index]
-    y_train, y_test = y[train_index], y[test_index]
+def Model():
+    finalDataSet = pd.read_csv("finalDataSet.csv")
+    finalDataSet.set_index("time", inplace=True)
+    # print(df.tail())
 
-...
-# regression model
-Model = LassoLars(alpha=0.01).fit(X_train, y_train)
+    ...
+    foreCastColumn = "close"  # creating label
 
-...
-# cross validated accucary on train set
-scores = cross_val_score(Model, X_train, y_train, cv=tscv)
+    foreCastOut = int(12)  # prediction for next 12 hrs
 
-print("Training Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-print("Intercept:", Model.intercept_)
-print("Slope:", Model.coef_[0])
+    finalDataSet["label"] = finalDataSet[foreCastColumn].shift(-foreCastOut)
 
-...
-# prediction on training
-trainPredict = Model.predict(X_train)
-r_squared = r2_score(y_train, trainPredict)
-mae = np.mean(abs(trainPredict - y_train))
-rmse = np.sqrt(np.mean((trainPredict - y_train) ** 2))
-rae = np.mean(abs(trainPredict - y_train)) / np.mean(abs(y_train - np.mean(y_train)))
-rse = np.mean((trainPredict - y_train) ** 2) / np.mean(
-    (y_train - np.mean(y_train)) ** 2
-)
-sumOfDf = DataFrame(
-    index=[
-        "R-squared",
-        "Mean Absolute Error",
-        "Root Mean Squared Error",
-        "Relative Absolute Error",
-        "Relative Squared Error",
-    ]
-)
-sumOfDf["Training metrics"] = [r_squared, mae, rmse, rae, rse]
+    ...
+    X = np.array(finalDataSet.drop(["label"], axis=1))
+    y = np.array(finalDataSet["label"])
 
-# prediction of test
-testPredict = Model.predict(X_test)
-r_squared = r2_score(y_test, testPredict)
-mae = np.mean(abs(testPredict - y_test))
-rmse = np.sqrt(np.mean((testPredict - y_test) ** 2))
-rae = np.mean(abs(testPredict - y_test)) / np.mean(abs(y_test - np.mean(y_test)))
-rse = np.mean((testPredict - y_test) ** 2) / np.mean((y_test - np.mean(y_test)) ** 2)
+    # normalize data
+    X = preprocessing.scale(X)
 
-sumOfDf["Validation metrics"] = [r_squared, mae, rmse, rae, rse]
-sumOfDf = sumOfDf.round(decimals=3)
+    XforeCastOut = X[-foreCastOut:]
 
-print(sumOfDf)  # accuracy check
+    X = X[:-foreCastOut]
+    y = y[:-foreCastOut]
 
-...
-# Save model to file in the current working directory
-fileName = "LLModel.pkl"
-joblib.dump(Model, fileName)
+    ...
+    # Split the data into train and test data set
+    tscv = TimeSeriesSplit(n_splits=5)
+    for train_index, test_index in tscv.split(X, y):
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
 
-# Load from file
-LLModel = joblib.load(fileName)
-# ElasticModel.predict(X_test)
-# print(r2_score(y_test, ElasticModel.predict(X_test)))
+    ...
+    # regression model
+    Model = LassoLars(alpha=0.01).fit(X_train, y_train)
 
-# forecast future 12 hrs values
-foreCastFutureValues = DataFrame(LLModel.predict(XforeCastOut))
-# print(foreCastFutureValues)
+    ...
+    # cross validated accucary on train set
+    scores = cross_val_score(Model, X_train, y_train, cv=tscv)
 
-...
-# assigning names to columns
-foreCastFutureValues.rename(columns={0: "Forecast"}, inplace=True)
+    print("Training Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+    print("Intercept:", Model.intercept_)
+    print("Slope:", Model.coef_[0])
 
-newDataframe = finalDataSet.tail(foreCastOut)
-
-newDataframe.reset_index(inplace=True)
-
-newDataframe = newDataframe.append(
-    DataFrame(
-        {
-            "time": pd.date_range(
-                start=newDataframe.time.iloc[-1],
-                periods=(len(newDataframe) + 1),
-                freq="H",
-                closed="right",
-            )
-        }
+    ...
+    # prediction on training
+    trainPredict = Model.predict(X_train)
+    r_squared = r2_score(y_train, trainPredict)
+    mae = np.mean(abs(trainPredict - y_train))
+    rmse = np.sqrt(np.mean((trainPredict - y_train) ** 2))
+    rae = np.mean(abs(trainPredict - y_train)) / np.mean(
+        abs(y_train - np.mean(y_train))
     )
-)
+    rse = np.mean((trainPredict - y_train) ** 2) / np.mean(
+        (y_train - np.mean(y_train)) ** 2
+    )
+    sumOfDf = DataFrame(
+        index=[
+            "R-squared",
+            "Mean Absolute Error",
+            "Root Mean Squared Error",
+            "Relative Absolute Error",
+            "Relative Squared Error",
+        ]
+    )
+    sumOfDf["Training metrics"] = [r_squared, mae, rmse, rae, rse]
 
-newDataframe.set_index("time", inplace=True)
+    # prediction of test
+    testPredict = Model.predict(X_test)
+    r_squared = r2_score(y_test, testPredict)
+    mae = np.mean(abs(testPredict - y_test))
+    rmse = np.sqrt(np.mean((testPredict - y_test) ** 2))
+    rae = np.mean(abs(testPredict - y_test)) / np.mean(abs(y_test - np.mean(y_test)))
+    rse = np.mean((testPredict - y_test) ** 2) / np.mean(
+        (y_test - np.mean(y_test)) ** 2
+    )
 
-newDataframe = newDataframe.tail(foreCastOut)
+    sumOfDf["Validation metrics"] = [r_squared, mae, rmse, rae, rse]
+    sumOfDf = sumOfDf.round(decimals=3)
 
-foreCastFutureValues.index = newDataframe.index
+    print(sumOfDf)  # accuracy check
 
+    ...
+    # Save model to file in the current working directory
+    fileName = "LLModel.pkl"
+    joblib.dump(Model, fileName)
+
+    # Load from file
+    LLModel = joblib.load(fileName)
+
+    # forecast future 12 hrs values
+    foreCastFutureValues = DataFrame(LLModel.predict(XforeCastOut))
+
+    ...
+    # assigning names to columns
+    foreCastFutureValues.rename(columns={0: "Forecast"}, inplace=True)
+
+    newDataframe = finalDataSet.tail(foreCastOut)
+
+    newDataframe.reset_index(inplace=True)
+
+    newDataframe = newDataframe.append(
+        DataFrame(
+            {
+                "time": pd.date_range(
+                    start=newDataframe.time.iloc[-1],
+                    periods=(len(newDataframe) + 1),
+                    freq="H",
+                    closed="right",
+                )
+            }
+        )
+    )
+
+    newDataframe.set_index("time", inplace=True)
+
+    newDataframe = newDataframe.tail(foreCastOut)
+
+    foreCastFutureValues.index = newDataframe.index
+
+    foreCastFutureValues.reset_index(inplace=True)
+
+    return foreCastFutureValues
+
+
+forecastFutureValues = Model()
 print("12 hours forecast (hourly):")
-foreCastFutureValues.reset_index(inplace=True)
-
-print(foreCastFutureValues)
+print(forecastFutureValues)
