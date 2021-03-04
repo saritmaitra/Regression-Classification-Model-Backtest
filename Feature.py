@@ -1,70 +1,78 @@
 import pandas as pd
 from pandas import concat, DataFrame
 
-df = pd.read_csv("BitCoinRaw.csv")
-df.set_index("time", inplace=True)
-# print(df.tail())
+...
 
-df.drop(columns=["conversionType", "conversionSymbol"], axis=1, inplace=True)
 
-values = DataFrame(df.close.values)
-lags = 8
-columns = [values]
-for i in range(1, (lags + 1)):
-    columns.append(values.shift(i))
+def featureEngineering():
+    df = pd.read_csv("BitCoinRaw.csv")
+    df.set_index("time", inplace=True)
+    # print(df.tail())
 
-dt = concat(columns, axis=1)
+    df.drop(columns=["conversionType", "conversionSymbol"], axis=1, inplace=True)
 
-columns = ["Lag"]
-for i in range(1, (lags + 1)):
-    columns.append("Lag" + str(i))
-dt.columns = columns
-dt.index = df.index
+    values = DataFrame(df.close.values)
+    lags = 8
+    columns = [values]
+    for i in range(1, (lags + 1)):
+        columns.append(values.shift(i))
 
-finalDataSet = concat([df, dt], axis=1)
+    dt = concat(columns, axis=1)
 
-finalDataSet.dropna(inplace=True)
+    columns = ["Lag"]
+    for i in range(1, (lags + 1)):
+        columns.append("Lag" + str(i))
+    dt.columns = columns
+    dt.index = df.index
 
-finalDataSet["S_10"] = finalDataSet["close"].rolling(window=10).mean()
+    finalDataSet = concat([df, dt], axis=1)
 
-finalDataSet["Corr"] = (
-    finalDataSet["close"].rolling(window=10).corr(finalDataSet["S_10"])
-)
+    finalDataSet.dropna(inplace=True)
 
-finalDataSet["d_20"] = finalDataSet["close"].shift(480)
+    finalDataSet["S_10"] = finalDataSet["close"].rolling(window=10).mean()
 
-finalDataSet["5EMA"] = (
-    finalDataSet["close"].ewm(span=5, adjust=True, ignore_na=True).mean()
-)
+    finalDataSet["Corr"] = (
+        finalDataSet["close"].rolling(window=10).corr(finalDataSet["S_10"])
+    )
 
-finalDataSet["10EMA"] = (
-    finalDataSet["close"].ewm(span=10, adjust=True, ignore_na=True).mean()
-)
+    finalDataSet["d_20"] = finalDataSet["close"].shift(480)
 
-finalDataSet["20EMA"] = (
-    finalDataSet["close"].ewm(span=20, adjust=True, ignore_na=True).mean()
-)
+    finalDataSet["5EMA"] = (
+        finalDataSet["close"].ewm(span=5, adjust=True, ignore_na=True).mean()
+    )
 
-finalDataSet["mean"] = (finalDataSet["low"] + finalDataSet["high"]) / 2
+    finalDataSet["10EMA"] = (
+        finalDataSet["close"].ewm(span=10, adjust=True, ignore_na=True).mean()
+    )
 
-finalDataSet["returns"] = (
-    (finalDataSet["close"] - finalDataSet["open"]) / finalDataSet["open"] * 100.0
-)
+    finalDataSet["20EMA"] = (
+        finalDataSet["close"].ewm(span=20, adjust=True, ignore_na=True).mean()
+    )
 
-finalDataSet["volume"] = finalDataSet["volumeto"] - finalDataSet["volumefrom"]
+    finalDataSet["mean"] = (finalDataSet["low"] + finalDataSet["high"]) / 2
 
-finalDataSet.drop(["volumefrom", "volumeto"], 1, inplace=True)
+    finalDataSet["returns"] = (
+        (finalDataSet["close"] - finalDataSet["open"]) / finalDataSet["open"] * 100.0
+    )
 
-finalDataSet.dropna(inplace=True)
+    finalDataSet["volume"] = finalDataSet["volumeto"] - finalDataSet["volumefrom"]
 
-finalDataSet = finalDataSet.drop(["Lag"], axis=1)
+    finalDataSet.drop(["volumefrom", "volumeto"], 1, inplace=True)
 
-finalDataSet = finalDataSet.astype(float)
+    finalDataSet.dropna(inplace=True)
 
-finalDataSet = finalDataSet.sort_index(ascending=True)
-# dataframe.head(2)
+    finalDataSet = finalDataSet.drop(["Lag"], axis=1)
 
+    finalDataSet = finalDataSet.astype(float)
+
+    finalDataSet = finalDataSet.sort_index(ascending=True)
+    # dataframe.head(2)
+
+    print(finalDataSet.tail())
+
+    return finalDataSet
+
+
+finalDataset = featureEngineering()
 # save data
-finalDataSet.to_csv("finalDataSet.csv", header=True)
-
-print(finalDataSet.tail())
+finalDataset.to_csv("finalDataSet.csv", header=True)
