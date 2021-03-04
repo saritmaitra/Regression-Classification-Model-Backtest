@@ -23,6 +23,7 @@ finalDataSet["label"] = finalDataSet[foreCastColumn].shift(-foreCastOut)
 
 ...
 X = np.array(finalDataSet.drop(["label"], axis=1))
+y = np.array(finalDataSet["label"])
 
 # normalize data
 X = preprocessing.scale(X)
@@ -30,10 +31,8 @@ X = preprocessing.scale(X)
 XforeCastOut = X[-foreCastOut:]
 
 X = X[:-foreCastOut]
+y = y[:-foreCastOut]
 
-finalDataSet.dropna(inplace=True)
-
-y = np.array(finalDataSet["label"])
 
 ...
 # Split the data into train and test data set
@@ -44,7 +43,7 @@ for train_index, test_index in tscv.split(X, y):
 
 ...
 # regression model
-Model = LassoLars(alpha=0.01).fit(X, y).fit(X_train, y_train)
+Model = LassoLars(alpha=0.01).fit(X_train, y_train)
 
 ...
 # cross validated accucary on train set
@@ -90,16 +89,16 @@ print(sumOfDf)  # accuracy check
 
 ...
 # Save model to file in the current working directory
-fileName = "ElasticModel.pkl"
+fileName = "LLModel.pkl"
 joblib.dump(Model, fileName)
 
 # Load from file
-ElasticModel = joblib.load(fileName)
+LLModel = joblib.load(fileName)
 # ElasticModel.predict(X_test)
 # print(r2_score(y_test, ElasticModel.predict(X_test)))
 
 # forecast future 12 hrs values
-foreCastFutureValues = DataFrame(ElasticModel.predict(XforeCastOut))
+foreCastFutureValues = DataFrame(LLModel.predict(XforeCastOut))
 # print(foreCastFutureValues)
 
 ...
