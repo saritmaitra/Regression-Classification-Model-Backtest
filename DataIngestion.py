@@ -16,6 +16,19 @@ from math import sqrt
 from pandas import DataFrame, concat
 import pdb
 import time
+import json
+import pprint
+
+
+url = "https://min-api.cryptocompare.com/data/histohour"
+
+# check if url and API working
+r = requests.get(url)
+
+if r.status_code == 200:
+    print("Success!")
+else:
+    print("Error & stop execution here :-(")
 
 ...
 
@@ -23,20 +36,6 @@ import time
 def getData():
     apiKey = "43b01c420b66888ce4c91b364647600814578c186e8604322152f44c641ebbc1"
     url = "https://min-api.cryptocompare.com/data/histohour"
-
-    # check if url and API working
-    check = requests.get(url)
-    print(check)
-
-    # check if url and API working
-    check = requests.get(url)
-    print("If Response [200] then working:", check)
-
-    # check if url and API working
-    check = requests.get(url)
-    print(check.text)
-    print(check.status_code)
-    print("If Response [200] then working:", check)
 
     ...
     # BTC 1st 2000 datapoints
@@ -57,6 +56,8 @@ def getData():
     }
 
     result = requests.get(url, params=payload).json()
+
+    pprint.pprint(result)  # check original data format
 
     BitCoin2 = DataFrame(result["Data"])
 
