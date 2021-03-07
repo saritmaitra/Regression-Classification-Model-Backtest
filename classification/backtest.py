@@ -18,7 +18,7 @@ import sys, logging, json, pprint, requests
 from google.colab import files
 
 ...
-apiKey = "43b01c420b66888ce4c91b364647600814578c186e8604322152f44c641ebbc1"
+apiKey = "insert api key"
 url = "https://min-api.cryptocompare.com/data/histohour"
 
 # BTC data
