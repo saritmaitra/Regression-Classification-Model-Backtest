@@ -764,7 +764,7 @@ def runstrat():
     # instantiate Cerebro, add strategy, data, initial cash, commission and pyfolio for performance analysis
 
     SARIT = bt.Cerebro(stdstats = False, cheat_on_open=True, maxcpus=1)
-    # NIKLAS.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
+    # SARIT.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
     SARIT.addstrategy(ML_TestStrategy)
     SARIT.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
 
@@ -783,7 +783,7 @@ def runstrat():
     SARIT.broker.setcash(startCash)
     SARIT.broker.setcommission(commission=0.001)
     
-    startPortfolioValue = NIKLAS.broker.getvalue()
+    startPortfolioValue = SARIT.broker.getvalue()
     print('Starting Portfolio Value:', startPortfolioValue)
     print()
     
