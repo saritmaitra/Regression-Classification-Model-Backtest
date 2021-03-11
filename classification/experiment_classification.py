@@ -31,7 +31,7 @@ from google.colab import files
 import sklearn.externals
 import joblib
 
-apiKey = "43b01c420b66888ce4c91b364647600814578c186e8604322152f44c641ebbc1"
+apiKey = "API Key"
 url = "https://min-api.cryptocompare.com/data/histohour"
 
 # Original streaming data
@@ -50,8 +50,6 @@ print('Starting program ( hourly data)....')
 print()
 
 ...
-apiKey = "43b01c420b66888ce4c91b364647600814578c186e8604322152f44c641ebbc1"
-url = "https://min-api.cryptocompare.com/data/histohour"
 
 # BTC data
 payload = {
@@ -765,31 +763,31 @@ def runstrat():
 
     # instantiate Cerebro, add strategy, data, initial cash, commission and pyfolio for performance analysis
 
-    NIKLAS = bt.Cerebro(stdstats = False, cheat_on_open=True, maxcpus=1)
+    SARIT = bt.Cerebro(stdstats = False, cheat_on_open=True, maxcpus=1)
     # NIKLAS.addanalyzer(bt.analyzers.SharpeRatio, _name='sharpe_ratio')
-    NIKLAS.addstrategy(ML_TestStrategy)
-    NIKLAS.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
+    SARIT.addstrategy(ML_TestStrategy)
+    SARIT.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
 
     # Add the analyzers we are interested in
-    NIKLAS.addanalyzer(bt.analyzers.TradeAnalyzer, _name="ta")
-    NIKLAS.addanalyzer(bt.analyzers.SQN, _name="sqn")
-    NIKLAS.addobserver(bt.observers.Value)
-    NIKLAS.addanalyzer(bt.analyzers.SharpeRatio, riskfreerate=0.0)
-    NIKLAS.addanalyzer(bt.analyzers.Returns)
-    NIKLAS.addanalyzer(bt.analyzers.DrawDown)
+    SARIT.addanalyzer(bt.analyzers.TradeAnalyzer, _name="ta")
+    SARIT.addanalyzer(bt.analyzers.SQN, _name="sqn")
+    SARIT.addobserver(bt.observers.Value)
+    SARIT.addanalyzer(bt.analyzers.SharpeRatio, riskfreerate=0.0)
+    SARIT.addanalyzer(bt.analyzers.Returns)
+    SARIT.addanalyzer(bt.analyzers.DrawDown)
     
-    NIKLAS.adddata(data)
+    SARIT.adddata(data)
 
     # Set desired cash start
 
-    NIKLAS.broker.setcash(startCash)
-    NIKLAS.broker.setcommission(commission=0.001)
+    SARIT.broker.setcash(startCash)
+    SARIT.broker.setcommission(commission=0.001)
     
     startPortfolioValue = NIKLAS.broker.getvalue()
     print('Starting Portfolio Value:', startPortfolioValue)
     print()
     
-    strategies = NIKLAS.run(runonce=False)
+    strategies = SARIT.run(runonce=False)
 
     firstStrat = strategies[0]
 
@@ -799,7 +797,7 @@ def runstrat():
     printSQN(firstStrat.analyzers.sqn.get_analysis())
 
     # Get final portfolio Value
-    endPortfolioValue = NIKLAS.broker.getvalue()
+    endPortfolioValue = SARIT.broker.getvalue()
     print()
     print(f'Final Portfolio Value: {endPortfolioValue:.2f}')
         
