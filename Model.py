@@ -46,6 +46,8 @@ def Model():
     ...
     # regression model
     Model = LassoLars(alpha=0.01).fit(X_train, y_train)
+    
+    # EN = ElasticNet(alpha = 0.0001, l1_ratio = 0.5, random_state = 0).fit(X_train, y_train)
 
     ...
     # cross validated accucary on train set
